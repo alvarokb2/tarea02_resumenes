@@ -27,17 +27,19 @@ void leerLinea() {
     if (flujo.fail()) {
         cout << "Error al abrir archivo" << endl;
     } else {
-        while (!flujo.eof()) {
-            getline(flujo, linea);
-            Peticion *actual = new Peticion(linea);
-
-            cout << "ip: " << actual->getIp() << "/ fecha: " << actual->getFecha() << "/ estado: " << actual->getEstado() << endl;
-            cout << "count: " << count << "/ so: " << actual->getSo() << endl;
+        while (flujo.good()) {
             count++;
+
+                getline(flujo, linea);
+                Peticion *actual = new Peticion(linea);
+                cout << "ip: " << actual->getIp() << "/ fecha: " << actual->getFecha() << "/ estado: " << actual->getEstado() << endl;
+                cout << "count: " << count << endl <<"so: " << actual->getSo() << endl;
+            
         }
         flujo.close();
     }
 }
+
 
 
 #endif	/* ACCESS_H */
