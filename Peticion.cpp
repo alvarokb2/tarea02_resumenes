@@ -67,24 +67,50 @@ public:
 
     
     void parseLog(string log) {
-        char* str = strdup(log.c_str());
         string aux;
-        ip = strtok(str, " ");
-        aux = strtok(NULL, " ");
-        aux = strtok(NULL, " ");
-        fecha = parseFecha(strtok(NULL, " "));
-        aux = strtok(NULL, " ");
-        aux = strtok(NULL, " ");
-        aux = strtok(NULL, " ");
-        aux = strtok(NULL, " ");
-        estado = strtok(NULL, " ");
+        string aux2;
+        int pos = log.find_first_of(" ");
 
-        aux = strtok(NULL, "\"");
-        aux = strtok(NULL, "\"");
-        aux = strtok(NULL, "\"");
-        so = strtok(NULL, "\"");
-        
-        free(str);
+        //ip
+        setIp(log.substr(0, pos));
+        aux = log.substr(pos + 1, log.size() - ip.size() - 1);
+        pos = aux.find_first_of(" ");
+        aux2 = aux.substr(0, pos);
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of(" ");
+        aux2 = aux.substr(0, pos);
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of(" ");
+        aux2 = aux.substr(0, pos);
+        //fecha
+        setFecha(parseFecha(aux2));
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of(" ");
+        aux2 = aux.substr(0, pos);
+        aux = aux.substr(pos + 2, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of("\"");
+        aux2 = aux.substr(0, pos);
+        aux = aux.substr(pos + 2, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of(" ");
+        aux2 = aux.substr(0, pos);
+        //estado
+        setEstado(aux2);
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+
+        pos = aux.find_first_of("\"");
+        aux2 = aux.substr(0, pos);
+
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of("\"");
+        aux2 = aux.substr(0, pos);
+
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of("\"");
+        aux2 = aux.substr(0, pos);
+        aux = aux.substr(pos + 1, log.size() - aux2.size() - 1);
+        pos = aux.find_first_of("\"");
+        aux2 = aux.substr(0, pos);
+        setSo(aux2);
     }
 
     string parseFecha(string f) {
