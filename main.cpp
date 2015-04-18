@@ -67,27 +67,6 @@ int main(int argc, char** argv) {
 
             leerLinea();
             
-            ifstream flujo(*(argv + 4));
-            string str;
-            int count = 0;
-            char c = flujo.get();
-            while (flujo.good()) {
-                if (c == '\n'){
-                    count++;
-                }
-                str.append(&c);
-                c = flujo.get();
-                
-            }
-            
-            cout << "Archivo: " << *(argv + 4) << endl;
-            cout << "  - Size  : " << str.size() << endl;
-            cout << "  - Lines : " << count << endl;
-            flujo.close();
-
-
-
-
             cout << "Opcion geo" << endl;
         } else {
             cout << "La opcion " << *(argv + 1) << " no existe o los argumentos no son validos" << endl;
