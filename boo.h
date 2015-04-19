@@ -199,14 +199,14 @@ int compararFecha(string fecha1, string fecha2) {
 
         if (str.length() != 0) {
             if (estado == 2) {
-                str = parseFecha(str);
+                 str = parseFecha(str);
                 if(response == NULL){
                     if(compararFecha(str,fecha_i) == 0){
-                        
                         response = auxToken->previous;
                     }
                 }
                 if(compararFecha(str,fecha_f) == 1){
+                    auxToken->previous->next = NULL;
                     break;
                 }
             }
@@ -214,7 +214,6 @@ int compararFecha(string fecha1, string fecha2) {
             pos += str.length();
             if (func != NULL) func(auxToken);
         }
-        if (response == NULL) response = auxToken;
         if (c == ex) break;
     }
     return response;
