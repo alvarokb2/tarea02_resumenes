@@ -11,33 +11,17 @@
 #include "boo.h"
 using namespace std;
 
-int compararFecha(string fecha1, string fecha2) {
-    if (fecha1.substr(0, 4) < fecha2.substr(0, 4)) {
-        return -1;
-    } else {
-        if (fecha1.substr(6, 2) < fecha2.substr(6, 2)) {
-            return -1;
-        } else {
-            if (fecha1.substr(8, 2) < fecha2.substr(8, 2)) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-    }
-}
-
-booTokenPtr leerAccess(char * archivo) {
+booTokenPtr leerAccess(char * fecha_i, char * fecha_f, char * archivo) {
     FILE * files = fopen(archivo, "r");
     booTokenPtr d;
     if (files != NULL) {
-        d = getTokensAccess(files, -1);
+        d = getTokensAccess(files,fecha_i, fecha_f, -1);
         if (d != NULL) {
             int i = 0;
             do {
                 imprimir(d);
                 d = d->next;
-            } while (d != NULL && ++i < 80);
+            } while (d != NULL);
         }
     } else {
         cout << "No se puede abrir el archivo." << endl;
@@ -55,8 +39,7 @@ booTokenPtr leerCsvLocations() {
             int i = 0;
             do {
                 d = d->next;
-                imprimir(d);
-            } while (d != NULL && ++i < 80);
+            } while (d != NULL);
         }
     } else {
         cout << "No se puede abrir el archivo." << endl;
@@ -74,8 +57,7 @@ booTokenPtr leerCsvBlock() {
             int i = 0;
             do {
                 d = d->next;
-                imprimir(d);
-            } while (d != NULL && ++i < 80);
+            } while (d != NULL);
 
         }
     } else {
@@ -84,6 +66,8 @@ booTokenPtr leerCsvBlock() {
     fclose(files);
     return d;
 }
+
+
 
 #endif	/* ACCESS_H */
 
