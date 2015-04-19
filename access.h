@@ -11,66 +11,79 @@
 #include "boo.h"
 using namespace std;
 
-int contarLineas() {
-    ifstream flujo("access.log");
-    string str;
-    int count = 0;
-    char c = flujo.get();
-    while (flujo.good()) {
-        if (c == '\n') {
-            count++;
+int compararFecha(string fecha1, string fecha2) {
+    if (fecha1.substr(0, 4) < fecha2.substr(0, 4)) {
+        return -1;
+    } else {
+        if (fecha1.substr(6, 2) < fecha2.substr(6, 2)) {
+            return -1;
+        } else {
+            if (fecha1.substr(8, 2) < fecha2.substr(8, 2)) {
+                return -1;
+            } else {
+                return 1;
+            }
         }
-        str.append(&c);
-        c = flujo.get();
     }
-    flujo.close();
-    return count;
 }
 
-void leerLinea2() {
-    FILE * files = fopen("access.log", "r");
+booTokenPtr leerAccess(char * archivo) {
+    FILE * files = fopen(archivo, "r");
     booTokenPtr d;
     if (files != NULL) {
-        d = getTokens(files, -1);
+        d = getTokensAccess(files, -1);
         if (d != NULL) {
             int i = 0;
             do {
                 imprimir(d);
                 d = d->next;
-
             } while (d != NULL && ++i < 80);
         }
     } else {
         cout << "No se puede abrir el archivo." << endl;
     }
     fclose(files);
+    return d;
 }
 
-void leerLinea() {
-    ifstream flujo("access.log", ios::in);
-    string linea;
-    int lineasArchivo = contarLineas();
-    int count = 0;
-    if (flujo.fail()) {
-        cout << "Error al abrir archivo" << endl;
-    } else {
-        while (flujo.good() && count < lineasArchivo) {
-            count++;
-
-            getline(flujo, linea);
-            Peticion *actual = new Peticion(linea);
-
-            if (count % 1000 == 0) {
-                cout << "ip: " << actual->getIp() << "/ fecha: " << actual->getFecha();
-                cout << "/ estado: " << actual->getEstado() << endl;
-                cout << "count: " << count << endl << "so: " << actual->getSo() << endl;
-            }
+booTokenPtr leerCsvLocations() {
+    FILE * files = fopen("GeoLite2-City-Locations-es.csv", "r");
+    booTokenPtr d;
+    if (files != NULL) {
+        d = getTokensLocations(files, -1);
+        if (d != NULL) {
+            int i = 0;
+            do {
+                d = d->next;
+                imprimir(d);
+            } while (d != NULL && ++i < 80);
         }
-        flujo.close();
+    } else {
+        cout << "No se puede abrir el archivo." << endl;
     }
+    fclose(files);
+    return d;
 }
 
+booTokenPtr leerCsvBlock() {
+    FILE * files = fopen("GeoLite2-City-Blocks-IPv4.csv", "r");
+    booTokenPtr d;
+    if (files != NULL) {
+        d = getTokensBlock(files, -1);
+        if (d != NULL) {
+            int i = 0;
+            do {
+                d = d->next;
+                imprimir(d);
+            } while (d != NULL && ++i < 80);
 
+        }
+    } else {
+        cout << "No se puede abrir el archivo." << endl;
+    }
+    fclose(files);
+    return d;
+}
 
 #endif	/* ACCESS_H */
 
