@@ -72,6 +72,28 @@ string parseFecha(string f) {
     return _fecha;
 }
 
+int compararFecha(string fecha1, string fecha2) {
+    if (fecha1.substr(0, 4) < fecha2.substr(0, 4)) {
+        return -1;
+    } else if (fecha1.substr(0, 4) == fecha2.substr(0, 4)) {
+        if (fecha1.substr(6, 2) < fecha2.substr(6, 2)) {
+            return -1;
+        } else if (fecha1.substr(6, 2) == fecha2.substr(6, 2)) {
+            if (fecha1.substr(8, 2) < fecha2.substr(8, 2)) {
+                return -1;
+            } else if (fecha1.substr(8, 2) == fecha2.substr(8, 2)) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 1;
+        }
+    } else {
+        return 1;
+    }
+}
+
     booTokenPtr getTokensAccess(
         FILE *file,
         int ex = -1,
@@ -178,6 +200,15 @@ string parseFecha(string f) {
         if (str.length() != 0) {
             if (estado == 2) {
                 str = parseFecha(str);
+                if(response == NULL){
+                    if(compararFecha(str,fecha_i) == 0){
+                        
+                        response = auxToken->previous;
+                    }
+                }
+                if(compararFecha(str,fecha_f) == 1){
+                    break;
+                }
             }
             auxToken = addToken(posToken, pos, str);
             pos += str.length();
