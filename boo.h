@@ -46,122 +46,340 @@ using namespace std;
         return token;
     }
 
-    booTokenPtr getTokens(
-            FILE *file,
-            int ex = -1,
-            void (*func)(const booTokenPtr token) = NULL
-            ) {
-        booTokenPtr response = NULL;
-        booTokenPtr posToken = NULL;
-        booTokenPtr auxToken = NULL;
-        string str;
-        int c = getc(file);
-        long pos = 0;
-        int count = 0;
-        int estado = 0;
-        int contador = 0;
-        while (1) {
-            str.clear();
-            switch (estado) {
-                case 0:
-                    if (c != ' ' && c != '\n' && c != ex) {
-                        while (c != ' ' && c != '\n' && c != ex) {
-                            str += c;
-                            c = getc(file);
-                        }
-                        estado = 1;
-                    } else {
-                        pos++;
-                        c = getc(file);
-                    }
-                    break;
-                case 1:
-                    if (c == '[') {
-                        while (c != ']' && contador < 13 && c != ex) {
-                            if (contador++ > 0 && contador < 13) str += c;
-                            c = getc(file);
-                        }
-                        contador = 0;
-                        c = getc(file);
-                        estado = 2;
-                    } else {
-                        pos++;
-                        c = getc(file);
-                    }
-                    break;
-                case 2:
-                    if (c == '"') {
-                        if (++contador == 2) {
-                            estado = 4;
-                            contador = 0;
-                        }
-                    }
-                    pos++;
-                    c = getc(file);
-                    break;
-                case 3:
-                    if (c == ' ') {
-                        if (++contador == 2) {
-                            estado = 4;
-                            contador = 0;
-                        }
-                    }
-                    pos++;
-                    c = getc(file);
-                    break;
-                case 4:
-                    if (c != ' ' && c != '\n' && c != ex) {
-                        while (c != ' ' && c != '\n' && c != ex) {
-                            str += c;
-                            c = getc(file);
-                        }
-                        estado = 5;
-                    } else {
-                        pos++;
-                        c = getc(file);
-                    }
-                    break;
-                case 5:
-                    if (c == '"') {
-                        if (++contador == 3) {
-                            estado = 6;
-                            contador = 0;
-                        }
-                    }
-                    pos++;
-                    c = getc(file);
-                    break;
-                case 6:
-                    if (c != '"' && c != '\n' && c != ex) {
-                        while (c != '"' && c != '\n' && c != ex) {
-                            str += c;
-                            c = getc(file);
-                        }
-                        pos++;
-                        c = getc(file);
-                        estado = 0;
-                    } else {
-                        pos++;
-                        c = getc(file);
-                    }
-                    break;
-                default:
-                    break;
-            }
 
-            if (str.length() != 0) {
-                if(estado == 2){
+string convertirMes(string month) {
+    if (month == "Jan")return "01";
+    else if (month == "Feb")return "02";
+    else if (month == "Mar")return "03";
+    else if (month == "Apr")return "04";
+    else if (month == "May")return "05";
+    else if (month == "Jun")return "06";
+    else if (month == "Jul")return "07";
+    else if (month == "Aug")return "08";
+    else if (month == "Sep")return "09";
+    else if (month == "Oct")return "10";
+    else if (month == "Nov")return "11";
+    else if (month == "Dec")return "12";
+}
+
+string parseFecha(string f) {
+
+    string _fecha = f.substr(0, 11);
+    string year = _fecha.substr(7, 4);
+    string month = _fecha.substr(3, 3);
+    string day = _fecha.substr(0, 2);
+    _fecha = year + "-" + convertirMes(month) + "-" + day;
+    return _fecha;
+}
+
+    booTokenPtr getTokensAccess(
+        FILE *file,
+        int ex = -1,
+        void (*func)(const booTokenPtr token) = NULL
+        ) {
+    booTokenPtr response = NULL;
+    booTokenPtr posToken = NULL;
+    booTokenPtr auxToken = NULL;
+    string str;
+    int c = getc(file);
+    long pos = 0;
+    int count = 0;
+    int estado = 0;
+    int contador = 0;
+    while (1) {
+        str.clear();
+        switch (estado) {
+            case 0:
+                if (c != ' ' && c != '\n' && c != ex) {
+                    while (c != ' ' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    estado = 1;
+                } else {
+                    pos++;
+                    c = getc(file);
                 }
-                auxToken = addToken(posToken, pos, str);
-                pos += str.length();
-                if (func != NULL) func(auxToken);
-            }
-            if (response == NULL) response = auxToken;
-            if (c == ex) break;
+                break;
+            case 1:
+                if (c == '[') {
+                    while (c != ']' && contador < 13 && c != ex) {
+                        if (contador++ > 0 && contador < 13) str += c;
+                        c = getc(file);
+                    }
+                    contador = 0;
+                    c = getc(file);
+                    estado = 2;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 2:
+                if (c == '"') {
+                    if (++contador == 2) {
+                        estado = 4;
+                        contador = 0;
+                    }
+                }
+                pos++;
+                c = getc(file);
+                break;
+            case 3:
+                if (c == ' ') {
+                    if (++contador == 2) {
+                        estado = 4;
+                        contador = 0;
+                    }
+                }
+                pos++;
+                c = getc(file);
+                break;
+            case 4:
+                if (c != ' ' && c != '\n' && c != ex) {
+                    while (c != ' ' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    estado = 5;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 5:
+                if (c == '"') {
+                    if (++contador == 3) {
+                        estado = 6;
+                        contador = 0;
+                    }
+                }
+                pos++;
+                c = getc(file);
+                break;
+            case 6:
+                if (c != '"' && c != '\n' && c != ex) {
+                    while (c != '"' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 0;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            default:
+                break;
         }
-        cout << endl;
-        return response;
+
+        if (str.length() != 0) {
+            if (estado == 2) {
+                str = parseFecha(str);
+            }
+            auxToken = addToken(posToken, pos, str);
+            pos += str.length();
+            if (func != NULL) func(auxToken);
+        }
+        if (response == NULL) response = auxToken;
+        if (c == ex) break;
     }
+    return response;
+}
+
+booTokenPtr getTokensLocations(
+        FILE *file,
+        int ex = -1,
+        void (*func)(const booTokenPtr token) = NULL
+        ) {
+    booTokenPtr response = NULL;
+    booTokenPtr posToken = NULL;
+    booTokenPtr auxToken = NULL;
+    string str;
+    int c = getc(file);
+    long pos = 0;
+    int estado = 0;
+    while (1) {
+        str.clear();
+        switch (estado) {
+            case 0:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 1;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 1:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 2;
+                } else {
+                    pos++;
+                    c = getc(file);                }
+                break;
+            case 2:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 3;
+                } else {
+                    pos++;
+                    c = getc(file);                }
+                break;
+            case 3:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 4;
+                } else {
+                    pos++;
+                    c = getc(file);                }
+                break;
+            case 4:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 5;
+                } else {
+                    pos++;
+                    c = getc(file);                }
+                break;
+            case 5:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 6;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 6:
+                if (c != '\n' && c != ex) {
+                    while (c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                estado = 0;
+                break;
+            default:
+                break;
+        }
+
+        if (str.length() != 0) {
+            auxToken = addToken(posToken, pos, str);
+            pos += str.length();
+            if (func != NULL) func(auxToken);
+        }
+        if (response == NULL) response = auxToken;
+        if (c == ex) break;
+    }
+    return response;
+}
+
+booTokenPtr getTokensBlock(
+        FILE *file,
+        int ex = -1,
+        void (*func)(const booTokenPtr token) = NULL
+        ) {
+    booTokenPtr response = NULL;
+    booTokenPtr posToken = NULL;
+    booTokenPtr auxToken = NULL;
+    string str;
+    int c = getc(file);
+    long pos = 0;
+    int estado = 0;
+    while (1) {
+        str.clear();
+        switch (estado) {
+            case 0:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 1;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 1:
+                if (c != ',' && c != '\n' && c != ex) {
+                    while (c != ',' && c != '\n' && c != ex) {
+                        str += c;
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                    estado = 2;
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                break;
+            case 2:
+                if (c != '\n' && c != ex) {
+                    while (c != '\n' && c != ex) {
+                        c = getc(file);
+                    }
+                    pos++;
+                    c = getc(file);
+                } else {
+                    pos++;
+                    c = getc(file);
+                }
+                estado = 0;
+                break;
+            default:
+                break;
+        }
+
+        if (str.length() != 0) {
+            auxToken = addToken(posToken, pos, str);
+            pos += str.length();
+            if (func != NULL) func(auxToken);
+        }
+        if (response == NULL) response = auxToken;
+        if (c == ex) break;
+    }
+    return response;
+}
+
+
     void imprimir(const booTokenPtr token) {
         if (token == NULL) return;
         cout << token->value << endl;
