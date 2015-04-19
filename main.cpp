@@ -65,7 +65,9 @@ int main(int argc, char** argv) {
         else if (strcmp(*(argv + 1), "-geo") == 0 &&
                 ValidarArgumentos(*(argv + 2), *(argv + 3), *(argv + 4))) {
 
-            leerLinea2();
+            booTokenPtr accesos = leerAccess(*(argv + 2), *(argv + 3),*(argv + 4));
+            booTokenPtr csvBlock = leerCsvBlock();
+            booTokenPtr csvLoc = leerCsvLocations();
             
             cout << "Opcion geo" << endl;
         } else {
