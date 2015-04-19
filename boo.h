@@ -96,6 +96,8 @@ int compararFecha(string fecha1, string fecha2) {
 
     booTokenPtr getTokensAccess(
         FILE *file,
+        string fecha_i,
+        string fecha_f,
         int ex = -1,
         void (*func)(const booTokenPtr token) = NULL
         ) {
@@ -199,7 +201,7 @@ int compararFecha(string fecha1, string fecha2) {
 
         if (str.length() != 0) {
             if (estado == 2) {
-                 str = parseFecha(str);
+                str = parseFecha(str);
                 if(response == NULL){
                     if(compararFecha(str,fecha_i) == 0){
                         response = auxToken->previous;
