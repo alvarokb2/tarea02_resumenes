@@ -36,11 +36,11 @@ booTokenPtr leerCsvLocations() {
     return response;
 }
 
-booTokenPtr leerCsvBlock() {
+booTokenPtr leerCsvBlocks() {
     FILE * files = fopen("GeoLite2-City-Blocks-IPv4.csv", "r");
     booTokenPtr response = NULL;
     if (files != NULL) {
-        response = getTokensLocations(files, -1);
+        response = getTokensBlock(files, -1);
         
     } else {
         cout << "No se puede abrir el archivo." << endl;
