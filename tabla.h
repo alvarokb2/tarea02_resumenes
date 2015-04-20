@@ -22,58 +22,121 @@ typedef tabla * tablaPtr;
 
 int indexEstado(string estado);
 
+void imprimirFila(tablaPtr _tabla) {
+    cout << _tabla->id << endl;
+    for (int i = 0; i < 52; i++) {
+        cout << _tabla->estados[i] << " ";
+    }
+    cout << endl;
+}
 
 tablaPtr addFila(tablaPtr &_fila, string _id, string _estado) {
     tablaPtr fila = (tablaPtr) malloc(sizeof (tabla));
     fila->id = _id;
     fila->estados[indexEstado(_estado)]++;
-    if(fila != NULL) _fila->next = fila;
+    if (fila != NULL) _fila->next = fila;
     _fila = fila;
     return fila;
 }
 
-tablaPtr sumarEstado(tablaPtr _tabla,string _id, string _estado){
+tablaPtr sumarEstado(tablaPtr _tabla, string _id, string _estado) {
     tablaPtr actual = _tabla;
     int aux = 0;
-    while(actual !=NULL && aux == 0){
-        if(actual->id == _id){
+    while (actual != NULL && aux == 0) {
+        if (actual->id == _id) {
             actual->estados[indexEstado(_estado)]++;
             aux = 1;
-            while(actual->next!=NULL){
+            while (actual->next != NULL) {
+                actual = actual->next;
+            }
+        } else {
+            if (actual->next != NULL) {
                 actual = actual->next;
             }
         }
-        else{
-            if(actual->next != NULL){
-                actual = actual->next;    
-            }
-        }
     }
-    if(aux == 0){
-        actual = addFila(_tabla,_id,_estado);
+    if (aux == 0) {
+        actual = addFila(_tabla, _id, _estado);
     }
     return actual;
 }
 
+string convertirBinario(string decimal){
+    string aux="";
+    int n = atoi(decimal.c_str());
+    while(aux.length() < 8){
+        if(n % 2 == 1){
+            aux = "1" + aux;
+            n = n/2;
+        }
+        else{
+            aux = "0" + aux;
+            n = n/2;
+        }
+    }
+    return aux;
+}
+
+string cadenaBinario(string n){
+    int pos = n.find_first_of(".");
+    string bit8 = n.substr(0,pos);
+    string aux = n.substr(pos+1);
+    pos = aux.find_first_of(".");
+    string bit16 = aux.substr(0,pos);    
+    aux = aux.substr(pos+1);
+    pos = aux.find_first_of(".");
+    string bit24 = aux.substr(0,pos);    
+    string bit32 = aux.substr(pos+1);    
+    aux = convertirBinario(bit8) + convertirBinario(bit16) + convertirBinario(bit24)+convertirBinario(bit32);
+    return aux;
+}
+
+
+bool compararIp(string _accesos, string _block) {
+    int pos = _block.find_first_of("/");
+    string block = _block.substr(0, pos);
+    string prefijored = _block.substr(pos+1);    
+    block = cadenaBinario(block);
+    string accesos = cadenaBinario(_accesos);
+    pos = atoi(prefijored.c_str());
+    if(block.substr(0,pos)==accesos.substr(0,pos)){
+        return true;
+    }
+    else{
+        return false;
+    }
+    
+}
 
 tablaPtr getTabla(booTokenPtr _access, booTokenPtr _location, booTokenPtr _block) {
+    cout << _access->value << " " << _location->value << " " << _block->value << endl;
+
+
     tablaPtr response = NULL;
     tablaPtr aux = NULL;
     booTokenPtr access = _access;
-    booTokenPtr location = _location;
-    booTokenPtr block = _block;
-    while (access->value!=NULL) {
-        while(access->value != block->value && block->value!=NULL) {
-            block = block->next->next;
+    booTokenPtr location = _location->next->next;
+    booTokenPtr block = _block->next->next;
+    while (access->value != NULL) {
+        while (!compararIp(access->value , block->value) && block->value != NULL) {
+            
+            if (block->next->next != NULL) {
+                block = block->next->next;
+            }
+            else{
+                
+            }
         }
         block = block->next;
-        while(block->value != location->value){
-            location = location->next->next;
+        while (block->value != location->value) {
+            if (block->next->next != NULL) {
+                location = location->next->next;
+            }
         }
         location = location->next;
         access = access->next->next;
-        sumarEstado(aux,location->value, access->value);
-        if(response == NULL){
+        sumarEstado(aux, location->value, access->value);
+        if (response == NULL) {
             response = aux;
         }
     }
