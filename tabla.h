@@ -91,22 +91,18 @@ string cadenaBinario(string n) {
 }
 
 bool compararIp(string _accesos, string _block) {
-/*    int pos = _block.find_first_of("/");
+    int pos = _block.find_first_of("/");
     string block = _block.substr(0, pos);
     string prefijored = _block.substr(pos + 1);
     block = cadenaBinario(block);
     string accesos = cadenaBinario(_accesos);
     pos = atoi(prefijored.c_str());
-
     if (block.substr(0, pos) == accesos.substr(0, pos)) {
-        cout << "block encontrado"<<endl;
+        cout <<"true"<<endl;
         return true;
     } else {
         return false;
     }
-
- */ 
-    return true;
 }
 
 tablaPtr getTabla(booTokenPtr __access, booTokenPtr __location, booTokenPtr __block) {
@@ -117,7 +113,11 @@ tablaPtr getTabla(booTokenPtr __access, booTokenPtr __location, booTokenPtr __bl
     booTokenPtr block;
     while (access != NULL) {
         location = __location;
+        if (location->next != NULL) location = location->next;
+        if (location->next != NULL) location = location->next;
         block = __block;
+        if (block->next != NULL) block = block->next;
+        if (block->next != NULL) block = block->next;
         //buscar pais de la ip
         char * geoname_id = NULL;
         char * country_name = NULL;
@@ -146,16 +146,20 @@ tablaPtr getTabla(booTokenPtr __access, booTokenPtr __location, booTokenPtr __bl
                 }
             }
         }
-        if (country_name == NULL) {
-            // no se encontro el pais, avance ala siguiente registro de access ip
-        } else {
+        char * estado = NULL;
+        access = access->next;
+        if (access != NULL) {
+            access = access->next;
+            estado = access->value;
+        }
+        if (access != NULL) access = access->next;
+        if (access != NULL) access = access->next;
+
+        if (country_name != NULL && estado != NULL) {
             cout << country_name << "; ";
         }
-        access = access->next;
-        if (access != NULL) access = access->next;
-        if (access != NULL) access = access->next;
-        if (access != NULL) access = access->next;
     }
+    
     return response;
 }
 
