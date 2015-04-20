@@ -49,8 +49,5 @@ booTokenPtr leerCsvBlock() {
     return response;
 }
 
-
-
-
 #endif	/* ACCESS_H */
 
