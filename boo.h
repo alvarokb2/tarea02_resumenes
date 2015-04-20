@@ -4,7 +4,6 @@
  *
  * Created on 18 de abril de 2015, 17:32
  */
-
 #ifndef BOO_H
 #define	BOO_H
 
@@ -15,10 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "leer.h"
-
-using namespace std;
 
 using namespace std;
 //namespace boo {
@@ -323,5 +318,5 @@ booTokenPtr getTokensBlock(
     }
     return response;
 }
-#endif	/* BOO_H */
 
+#endif	/* BOO_H */
