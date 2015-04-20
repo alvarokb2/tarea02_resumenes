@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
             booTokenPtr csvBlock = leerCsvBlock();
             booTokenPtr csvLoc = leerCsvLocations();
             
-            cout << "Opcion geo" << endl;
+            tablaPtr tabla = getTabla(accesos,csvLoc,csvBlock);
         } else {
             cout << "La opcion " << *(argv + 1) << " no existe o los argumentos no son validos" << endl;
         }
